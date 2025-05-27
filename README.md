@@ -1,4 +1,4 @@
-# Week 14: Note Taking App with Auth
+# Week 15: Note Taking App with Auth
 
 ## Authentication and Protected Routes
 
