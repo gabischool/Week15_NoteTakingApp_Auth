@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../store/slices/authSlice";
+// import { logout } from "../store/slices/authSlice";
 
 const Navbar = () => {
   const { pathname } = useLocation();
