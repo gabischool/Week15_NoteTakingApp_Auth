@@ -1,11 +1,55 @@
+import React from "react"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod"
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { data } from "autoprefixer";
+
+export const loginSchema = z.object({
+  email: z.string().min(1, "Email is required").email("Invalid email format"),
+  password: z.string().min(1, "Password is required"),
+});
+
+export const registerSchema = z
+  .object({
+    email: z.string().min(1, "Email is required").email("Invalid email format"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(
+        // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      ),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+ 
+
 const Register = () => {
+  const dispatch= useDispatch();
+  const Navigate= useNavigate();
+
+  const {
+    Register, 
+    handleSubmit, 
+    formState: {error}
+  } = useForm({
+    resolver:zodResolver(registerSchema)})
+
+  const onSubmit = async(data) => {
+     console.log("SUBMIT")
+  }
   return (
     <div className="min-h-[60vh] flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           Create an Account
         </h2>
-
+      
         <form className="space-y-4">
           <div>
             <label
