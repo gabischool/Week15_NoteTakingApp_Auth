@@ -7,7 +7,7 @@ export const fetchNotes = createAsyncThunk(
   "notes/fetchNotes",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${BASE_URL}/notes`);
+      const response = await axios.get(`${BASE_URL}`/notes);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
