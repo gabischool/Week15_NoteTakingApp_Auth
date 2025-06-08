@@ -1,25 +1,30 @@
+// ✅ ViewNotes.jsx — Displays all saved notes, handles fetch & delete actions
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { StickyNote } from "lucide-react";
+
 import NoteCard from "../components/NoteCard";
 import { fetchNotes, deleteNote } from "../store/slices/notesSlice";
 
 const ViewNotes = () => {
   const dispatch = useDispatch();
+
+  // ✅ Access notes state from Redux store
   const { notes, loading, error } = useSelector((state) => state.notes);
 
+  // ✅ Fetch notes from server when component mounts
   useEffect(() => {
     dispatch(fetchNotes());
   }, [dispatch]);
 
+  // ✅ Handle delete note with confirmation
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this note?")) {
-      return;
-    }
+    if (!window.confirm("Are you sure you want to delete this note?")) return;
     dispatch(deleteNote(id));
   };
 
+  // ✅ Show loading spinner while fetching notes
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -30,6 +35,7 @@ const ViewNotes = () => {
     );
   }
 
+  // ✅ Show error message with retry button
   if (error) {
     return (
       <div className="text-center py-10">
@@ -44,6 +50,7 @@ const ViewNotes = () => {
     );
   }
 
+  // ✅ Show message if no notes are available
   if (notes.length === 0) {
     return (
       <div className="text-center py-16">
@@ -66,6 +73,7 @@ const ViewNotes = () => {
     );
   }
 
+  // ✅ Render notes in a responsive grid using NoteCard component
   return (
     <div className="max-w-6xl mx-auto">
       <div className="mb-8">

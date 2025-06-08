@@ -1,18 +1,22 @@
+// ✅ authSlice.js – Fully Implemented with Comments for Clarity and Maintainability
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../BaseUrl";
 
-// Configure axios to include credentials
+// ✅ Configure axios to include cookies (for sessions)
 axios.defaults.withCredentials = true;
 
 // TODO: Implement checkAuthStatus thunk
 export const checkAuthStatus = createAsyncThunk(
   "auth/checkStatus",
   async (_, { rejectWithValue }) => {
-    // TODO: Implement authentication status check
-    // 1. Make a GET request to /auth/check
-    // 2. Return the response data
-    // 3. Handle errors appropriately
+    try {
+      // ✅ Check if user is still authenticated by hitting the backend
+      const response = await axios.get(`${BASE_URL}/auth/check`);
+      return response.data; // { user: {...} }
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Check failed");
+    }
   }
 );
 
@@ -20,10 +24,13 @@ export const checkAuthStatus = createAsyncThunk(
 export const login = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {
-    // TODO: Implement login functionality
-    // 1. Make a POST request to /auth/login with credentials
-    // 2. Return the response data
-    // 3. Handle errors appropriately
+    try {
+      // ✅ Send credentials to backend to log in user
+      const response = await axios.post(`${BASE_URL}/auth/login`, credentials);
+      return response.data; // { user: {...} }
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Login failed");
+    }
   }
 );
 
@@ -31,10 +38,13 @@ export const login = createAsyncThunk(
 export const register = createAsyncThunk(
   "auth/register",
   async (userData, { rejectWithValue }) => {
-    // TODO: Implement registration functionality
-    // 1. Make a POST request to /auth/register with userData
-    // 2. Return the response data
-    // 3. Handle errors appropriately
+    try {
+      // ✅ Send user registration data to backend
+      const response = await axios.post(`${BASE_URL}/auth/register`, userData);
+      return response.data; // { user: {...} }
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Registration failed");
+    }
   }
 );
 
@@ -42,35 +52,101 @@ export const register = createAsyncThunk(
 export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
-    // TODO: Implement logout functionality
-    // 1. Make a POST request to /auth/logout
-    // 2. Handle errors appropriately
+    try {
+      // ✅ Log out user from backend (destroy session)
+      await axios.post(`${BASE_URL}/auth/logout`);
+      return true; // Return success flag
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Logout failed");
+    }
   }
 );
 
+// ✅ Initial state for auth
 const initialState = {
-  user: null,
-  isAuthenticated: false,
-  loading: true,
-  error: null,
+  user: null,             // Logged-in user info
+  isAuthenticated: false, // Whether the user is logged in
+  loading: true,          // Auth check loading indicator
+  error: null,            // Auth-related error messages
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    // ✅ Clear error from state
     clearError: (state) => {
       state.error = null;
     },
   },
   extraReducers: (builder) => {
-    builder;
-    // TODO: Add cases for checkAuthStatus
-    // TODO: Add cases for login
-    // TODO: Add cases for register
-    // TODO: Add cases for logout
+    // ✅ checkAuthStatus cases
+    builder
+      .addCase(checkAuthStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(checkAuthStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+      })
+      .addCase(checkAuthStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.user = null;
+        state.isAuthenticated = false;
+        state.error = action.payload;
+      })
+
+      // ✅ login cases
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // ✅ register cases
+      .addCase(register.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // ✅ logout cases
+      .addCase(logout.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.loading = false;
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
+// ✅ Export clearError action
 export const { clearError } = authSlice.actions;
+
+// ✅ Export the reducer
 export default authSlice.reducer;
