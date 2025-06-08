@@ -1,3 +1,4 @@
+// ✅ Navbar.jsx — Top navigation bar that changes based on auth state
 import {
   Sticker as Sticky,
   Plus,
@@ -14,8 +15,11 @@ const Navbar = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // ✅ Extract authentication state from Redux
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
+  // ✅ Handle user logout
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
@@ -25,6 +29,7 @@ const Navbar = () => {
     <header className="bg-white shadow-sm">
       <div className="container mx-auto px-4 py-4">
         <nav className="flex items-center justify-between">
+          {/* ✅ Logo & Home Link */}
           <Link
             to="/"
             className="flex items-center gap-2 text-yellow-600 font-bold text-xl"
@@ -34,7 +39,9 @@ const Navbar = () => {
           </Link>
 
           <div className="flex gap-4">
-       
+            {/* ✅ Show only when user is authenticated */}
+            {isAuthenticated && (
+              <>
                 <Link
                   to="/"
                   className={`flex items-center gap-1 px-3 py-2 rounded-md transition-colors ${
@@ -66,8 +73,12 @@ const Navbar = () => {
                   <LogOut size={18} />
                   <span>Logout</span>
                 </button>
- 
-      
+              </>
+            )}
+
+            {/* ✅ Show only when user is NOT authenticated */}
+            {!isAuthenticated && (
+              <>
                 <Link
                   to="/login"
                   className={`flex items-center gap-1 px-3 py-2 rounded-md transition-colors ${
@@ -91,7 +102,8 @@ const Navbar = () => {
                   <UserPlus size={18} />
                   <span>Register</span>
                 </Link>
-     
+              </>
+            )}
           </div>
         </nav>
       </div>
