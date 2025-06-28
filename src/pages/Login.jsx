@@ -1,4 +1,34 @@
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"; 
+import { useDispatch,useSelector}from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { login } from "../store/slices/authSlice";
+
+
+// Define the schema for login validation
+const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+});
+
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  //react hook form
+  const { Login, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+
+ // function to send user data to the redeux
+ const onsubmit=async (data) => {
+  try{
+    await dispatch(login(data)).unwrap();
+  }catch (error) {
+    console.error("Login failed:", error);
+  }
+  }
+  
   return (
     <div className="min-h-[60vh] flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
