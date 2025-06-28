@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../BaseUrl";
+import { use } from "react";
 
 // Async thunks
 export const fetchNotes = createAsyncThunk(
@@ -86,7 +87,7 @@ const notesSlice = createSlice({
       .addCase(fetchNotes.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || "Failed to fetch notes";
-      })
+      })      
       // Create Note
       .addCase(createNote.pending, (state) => {
         state.loading = true;

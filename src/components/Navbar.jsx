@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   Sticker as Sticky,
   Plus,
@@ -9,6 +10,11 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/slices/authSlice";
+
+
+const auth = isAuthenticated((state)) = useSelector((state) => state.auth );
+const authenticated = auth?.isAuthenticated || false;
+const user = auth?.user || null;
 
 const Navbar = () => {
   const { pathname } = useLocation();
