@@ -1,6 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../BaseUrl";
+   
+
+//configure axios defaults from note request
+axios.defaults.withCredentials = true;
+
 
 // Async thunks
 export const fetchNotes = createAsyncThunk(

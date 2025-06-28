@@ -1,4 +1,35 @@
-const Register = () => {
+import { useForm } from "react-hook-form";
+import{z} from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import{ useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Register } from "../store/slices/authSlice";
+
+const register =() => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate
+  
+
+//react hook form
+  const { Register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(RegisterSchema),
+  });
+
+
+
+  //function to send data to redux
+  const onRegister= async (data) => {
+    try {
+      await dispatch(Register(data)).unwrap();
+    } catch (error) {
+      console.log( error)
+    }
+  }
+
+ 
+
+  
+
   return (
     <div className="min-h-[60vh] flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -6,7 +37,7 @@ const Register = () => {
           Create an Account
         </h2>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit(onRegister)}>
           <div>
             <label
               htmlFor="email"
@@ -17,6 +48,7 @@ const Register = () => {
             <input
               type="email"
               id="email"
+              {...Register("email")}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
               placeholder="Enter your email"
             />
@@ -32,6 +64,7 @@ const Register = () => {
             <input
               type="password"
               id="password"
+              {...Register("password")}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
               placeholder="Enter your password"
             />
@@ -47,6 +80,7 @@ const Register = () => {
             <input
               type="password"
               id="confirmPassword"
+              {...Register("confirmPassword")}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
               placeholder="Confirm your password"
             />
@@ -69,6 +103,6 @@ const Register = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Register;
