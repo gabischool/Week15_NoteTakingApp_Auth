@@ -1,4 +1,35 @@
+import {z} from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 const Register = () => {
+  const schema = z.object({
+    email: z.string().email(),
+    password: z.string().min(6).max(100),
+    confirmPassword: z.string().min(6).max(100).refine((val, ctx) => {
+      if (val !== ctx.parent.password) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Passwords don't match",
+        });
+      }
+    }),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+  const handleRegister = (e) => {
+    e.preventDefault();
+  };
+  // Handle form submission logic here
+  // For example, you can send the data to your backend API for registration
   return (
     <div className="min-h-[60vh] flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">

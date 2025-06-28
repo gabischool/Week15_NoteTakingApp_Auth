@@ -9,21 +9,18 @@ axios.defaults.withCredentials = true;
 export const checkAuthStatus = createAsyncThunk(
   "auth/checkStatus",
   async (_, { rejectWithValue }) => {
-    // TODO: Implement authentication status check
-    // 1. Make a GET request to /auth/check
-    // 2. Return the response data
-    // 3. Handle errors appropriately
   }
 );
-
 // TODO: Implement login thunk
 export const login = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {
-    // TODO: Implement login functionality
-    // 1. Make a POST request to /auth/login with credentials
-    // 2. Return the response data
-    // 3. Handle errors appropriately
+    try {
+      const response = await axios.post(`${BASE_URL}/auth/login`, credentials);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -35,6 +32,12 @@ export const register = createAsyncThunk(
     // 1. Make a POST request to /auth/register with userData
     // 2. Return the response data
     // 3. Handle errors appropriately
+    try {
+      const response = await axios.get(`${BASE_URL}auth/checkStatus`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 

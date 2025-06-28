@@ -1,4 +1,26 @@
+import React from 'react';
+import {z} from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
 const Login = () => {
+  const schema = z.object({
+    email: z.string().email(),
+    password: z.string().min(6).max(100),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+  // Handle form submission logic here
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
   return (
     <div className="min-h-[60vh] flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -55,5 +77,6 @@ const Login = () => {
     </div>
   );
 };
+
 
 export default Login;
