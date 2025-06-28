@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 const ProtectedRoute = ({ children, requireAuth }) => {
   const { isAuthenticated, loading } = useSelector((state) => state.auth);
+  const location = useLocation();
 
   // Show loading state while checking authentication
   if (loading) {
@@ -16,13 +17,17 @@ const ProtectedRoute = ({ children, requireAuth }) => {
     );
   }
 
-  // TODO: If route requires authentication and user is not authenticated, redirect to login
- 
+  // ✅ If route requires authentication and user is NOT authenticated → redirect to login
+  if (requireAuth && !isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
-  //TODO: If route requires unauthenticated user and user is authenticated, redirect to notes
+  // ✅ If route requires unauthenticated user and user IS authenticated → redirect to notes
+  if (!requireAuth && isAuthenticated) {
+    return <Navigate to="/notes" replace />;
+  }
 
-
-  // Otherwise, render the children
+  // ✅ Otherwise, render the children
   return children;
 };
 
