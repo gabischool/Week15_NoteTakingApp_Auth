@@ -9,7 +9,6 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/slices/authSlice";
-
 const Navbar = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -17,7 +16,7 @@ const Navbar = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(logoutUser());
     navigate("/login");
   };
 
@@ -25,6 +24,7 @@ const Navbar = () => {
     <header className="bg-white shadow-sm">
       <div className="container mx-auto px-4 py-4">
         <nav className="flex items-center justify-between">
+        
           <Link
             to="/"
             className="flex items-center gap-2 text-yellow-600 font-bold text-xl"
@@ -33,8 +33,10 @@ const Navbar = () => {
             <span>Sticky Notes</span>
           </Link>
 
-          <div className="flex gap-4">
-       
+        
+          <div className="flex gap-4 items-center">
+            {isAuthenticated ? (
+              <>
                 <Link
                   to="/"
                   className={`flex items-center gap-1 px-3 py-2 rounded-md transition-colors ${
@@ -66,8 +68,9 @@ const Navbar = () => {
                   <LogOut size={18} />
                   <span>Logout</span>
                 </button>
- 
-      
+              </>
+            ) : (
+              <>
                 <Link
                   to="/login"
                   className={`flex items-center gap-1 px-3 py-2 rounded-md transition-colors ${
@@ -91,7 +94,8 @@ const Navbar = () => {
                   <UserPlus size={18} />
                   <span>Register</span>
                 </Link>
-     
+              </>
+            )}
           </div>
         </nav>
       </div>
