@@ -40,7 +40,7 @@ export const login = createAsyncThunk(
 );
 
 // TODO: Implement register thunk
-export const Register = createAsyncThunk(
+export const RegisterUser = createAsyncThunk(
   "auth/Register",
   async (userData, { rejectWithValue }) => {
     // TODO: Implement registration functionality
@@ -71,7 +71,7 @@ export const logout = createAsyncThunk(
 const initialState = {
   user: null,
   isAuthenticated: false,
-  loading: true,
+  status: "idle",
   error: null,
 };
 
@@ -123,17 +123,17 @@ const authSlice = createSlice({
 
     // TODO: Add cases for register
     builder
-    .addCase(Register.pending, (state) => {
+    .addCase(RegisterUser.pending, (state) => {
       state.status = "loading";
       state.userull;
     })
-    .addCase(Register.fulfilled, (state, action) => {
+    .addCase(RegisterUser.fulfilled, (state, action) => {
       state.status = "succeeded";
       state.user = action.payload;
       state.isAuthenticated = true;
       state.error = null;
     })
-    .addCase(Register.rejected, (state) => {
+    .addCase(RegisterUser.rejected, (state) => {
       state.status = "failed";
       state.error=action.error.message;
     })

@@ -3,24 +3,25 @@ import{z} from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import{ useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Register } from "../store/slices/authSlice";
+import { RegisterUser } from "../store/slices/authSlice";
+import { RegisterSchema } from "../schema/authSchema";
 
-const register =() => {
+const Register =() => {
   const dispatch = useDispatch();
   const navigate = useNavigate
   
 
 //react hook form
-  const { Register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(RegisterSchema),
   });
 
 
 
-  //function to send data to redux
+  //function to send data to redx
   const onRegister= async (data) => {
     try {
-      await dispatch(Register(data)).unwrap();
+      await dispatch(RegisterUser(data)).unwrap();
     } catch (error) {
       console.log( error)
     }
@@ -48,7 +49,7 @@ const register =() => {
             <input
               type="email"
               id="email"
-              {...Register("email")}
+              {...register("email")}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
               placeholder="Enter your email"
             />
@@ -64,7 +65,7 @@ const register =() => {
             <input
               type="password"
               id="password"
-              {...Register("password")}
+              {...register("password")}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
               placeholder="Enter your password"
             />
@@ -80,7 +81,7 @@ const register =() => {
             <input
               type="password"
               id="confirmPassword"
-              {...Register("confirmPassword")}
+              {...register("confirmPassword")}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
               placeholder="Confirm your password"
             />

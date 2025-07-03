@@ -16,12 +16,12 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   //react hook form
-  const { Login, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(loginSchema),
   });
 
  // function to send user data to the redeux
- const onsubmit=async (data) => {
+ const onSubmit =async (data) => {
   try{
     await dispatch(login(data)).unwrap();
   }catch (error) {
@@ -36,7 +36,7 @@ const Login = () => {
           Login to Your Account
         </h2>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label
               htmlFor="email"
@@ -47,6 +47,7 @@ const Login = () => {
             <input
               type="email"
               id="email"
+              {...register("email")}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
               placeholder="Enter your email"
             />
@@ -62,6 +63,7 @@ const Login = () => {
             <input
               type="password"
               id="password"
+              {...register("password")}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
               placeholder="Enter your password"
             />

@@ -48,10 +48,15 @@ const Navbar = () => {
                       : "hover:bg-gray-100 text-gray-700"
                   }`}
                 >
+                 
+
+              
                   <Plus size={18} />
                   <span>Create</span>
                 </Link>
 
+               { isAuthenticated && (
+                <>
                 <Link
                   to="/notes"
                   className={`flex items-center gap-1 px-3 py-2 rounded-md transition-colors ${
@@ -71,8 +76,15 @@ const Navbar = () => {
                   <LogOut size={18} />
                   <span>Logout</span>
                 </button>
+                </>
+              )}
+                
+  
+              
+
  
-      
+               {!isAuthenticated && (
+                <>
                 <Link
                   to="/login"
                   className={`flex items-center gap-1 px-3 py-2 rounded-md transition-colors ${
@@ -81,6 +93,7 @@ const Navbar = () => {
                       : "hover:bg-gray-100 text-gray-700"
                   }`}
                 >
+                  
                   <LogIn size={18} />
                   <span>Login</span>
                 </Link>
@@ -96,6 +109,8 @@ const Navbar = () => {
                   <UserPlus size={18} />
                   <span>Register</span>
                 </Link>
+                </>
+              )}
      
           </div>
         </nav>

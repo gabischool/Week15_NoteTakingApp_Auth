@@ -5,7 +5,7 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
-export const registerSchema = z
+export const RegisterSchema = z
   .object({
     email: z.string().min(1, "Email is required").email("Invalid email format"),
     password: z
@@ -17,3 +17,4 @@ export const registerSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+  

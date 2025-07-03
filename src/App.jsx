@@ -14,21 +14,25 @@ const App = () => {
   
           <Routes>
             <Route path="/login" element={
-                <Login />
+              <ProtectedRoute requireAuth={false}>
+                <Login /> 
+              </ProtectedRoute>
             } />
             <Route path="/Register" element={
+              <ProtectedRoute requireAuth={false}>
                 <Register />
+              </ProtectedRoute>
             }/>
               
             
             {/* protected routes,we need to use protectedroutes component */}
             <Route path="/notes" element={
-            <ProtectedRoute requireAuth>
+            <ProtectedRoute requireAuth={true}>
                <ViewNotes />
             </ProtectedRoute>
           } />
             <Route path="/" element={
-              <ProtectedRoute requireAuth>
+              <ProtectedRoute requireAuth={true}>
                 <CreateNote />
               </ProtectedRoute>
             } />
