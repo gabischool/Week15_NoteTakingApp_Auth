@@ -51,7 +51,7 @@ export const logout = createAsyncThunk(
 const initialState = {
   user: null,
   isAuthenticated: false,
-  loading: true,
+  status: "idle",
   error: null,
 };
 
