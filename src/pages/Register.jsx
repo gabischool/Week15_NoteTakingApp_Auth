@@ -1,5 +1,6 @@
 import {z} from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 const Register = () => {
   const schema = z.object({
     email: z.string().email(),

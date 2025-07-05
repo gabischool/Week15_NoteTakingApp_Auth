@@ -5,38 +5,39 @@ import CreateNote from "./pages/CreateNote";
 import ViewNotes from "./pages/ViewNotes";
 import Navbar from "./components/Navbar";
 import { Routes, Route } from "react-router-dom";
-import ProtectedRoute from "./components/auth/ProtectedRoute";
+import ProtectedRoute from "./components/auth/ProtectedRoute"
+
 
 const App = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <main className="container mx-auto px-4 py-8">
-  
-          <Routes>
-            <Route path="/login" element={
-              <Login />} />
+
+        <Routes>
+          <Route path="/login" element={
+            <ProtectedRoute requireAuth={false}>
+              <Login />
+            </ProtectedRoute>
+          } />
             <Route path="/register" element={
-              <Register />} />
+              <ProtectedRoute requireAuth={false}>  
+              <Register />
+              </ProtectedRoute>
+            } />
+           
 
               {/* protected routes, we need to use ProtectedRoute component */}
-            <Route path="/notes" element={<ViewNotes />} />
-            <ProtectedRoute requireAuth>
-              <ViewNotes />
-            </ProtectedRoute>
-          
+            <Route path="/notes" element={
+              <ProtectedRoute requireAuth={true}>
+                <ViewNotes />
+              </ProtectedRoute>
+            } />
+             
             <Route path="/" element={<CreateNote />} />
-            <ProtectedRoute requireAuth>
-              <CreateNote />
-            </ProtectedRoute>
           </Routes>
       </main>
     </div>
   );
 };
-
-const auth = isAuthenticated((state)) = useSelector((state) => state.auth );
-const authenticated = auth?.isAuthenticated || false;
-const user = auth?.user || null;
-
 export default App;
