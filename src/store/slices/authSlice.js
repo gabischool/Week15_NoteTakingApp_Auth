@@ -2,56 +2,63 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../BaseUrl";
 
-// Configure axios to include credentials
 axios.defaults.withCredentials = true;
 
-// TODO: Implement checkAuthStatus thunk
 export const checkAuthStatus = createAsyncThunk(
   "auth/checkStatus",
   async (_, { rejectWithValue }) => {
-    // TODO: Implement authentication status check
-    // 1. Make a GET request to /auth/check
-    // 2. Return the response data
-    // 3. Handle errors appropriately
+    try {
+      const res = await axios.get(`${BASE_URL}/auth/check`);
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Failed to check auth status.");
+    }
   }
 );
 
-// TODO: Implement login thunk
-export const login = createAsyncThunk(
+// ✅ Login
+export const loginUser = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {
-    // TODO: Implement login functionality
-    // 1. Make a POST request to /auth/login with credentials
-    // 2. Return the response data
-    // 3. Handle errors appropriately
+    try {
+      const res = await axios.post(`${BASE_URL}/auth/login`, credentials);
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Login failed.");
+    }
   }
 );
 
-// TODO: Implement register thunk
-export const register = createAsyncThunk(
+// ✅ Register
+export const registerUser = createAsyncThunk(
   "auth/register",
   async (userData, { rejectWithValue }) => {
-    // TODO: Implement registration functionality
-    // 1. Make a POST request to /auth/register with userData
-    // 2. Return the response data
-    // 3. Handle errors appropriately
+    try {
+      const res = await axios.post(`${BASE_URL}/auth/register`, userData);
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Registration failed.");
+    }
   }
 );
 
-// TODO: Implement logout thunk
-export const logout = createAsyncThunk(
+// ✅ Logout
+export const logoutUser = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
-    // TODO: Implement logout functionality
-    // 1. Make a POST request to /auth/logout
-    // 2. Handle errors appropriately
+    try {
+      await axios.post(`${BASE_URL}/auth/logout`);
+      return true;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Logout failed.");
+    }
   }
 );
 
 const initialState = {
   user: null,
   isAuthenticated: false,
-  loading: true,
+  status: "Idle",
   error: null,
 };
 
@@ -64,11 +71,63 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder;
-    // TODO: Add cases for checkAuthStatus
-    // TODO: Add cases for login
-    // TODO: Add cases for register
-    // TODO: Add cases for logout
+    builder
+      // 🔄 Check Auth Status
+      .addCase(checkAuthStatus.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(checkAuthStatus.fulfilled, (state, action) => {
+        state.status = "success";
+        state.isAuthenticated = true;
+        state.user = action.payload.user;
+        state.error = null;
+      })
+      .addCase(checkAuthStatus.rejected, (state) => {
+        state.status = "fail";
+        state.isAuthenticated = false;
+        state.user = null;
+      })
+
+      // 🔐 Login
+      .addCase(loginUser.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.status = "success";
+        state.isAuthenticated = true;
+        state.user = action.payload.user;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.status = "fail";
+        state.isAuthenticated = false;
+        state.error = action.payload;
+      })
+
+      // 📝 Register
+      .addCase(registerUser.pending, (state) => {
+        state.status = "laoding";
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.status = "success";
+        state.isAuthenticated = true;
+        state.user = action.payload.user;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.status = "fail";
+        state.isAuthenticated = false;
+        state.error = action.payload;
+      })
+
+      // 🚪 Logout
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.error = action.payload;
+      });
   },
 });
 
